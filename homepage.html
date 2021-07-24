@@ -1,4 +1,5 @@
-﻿<html>
+﻿﻿
+<html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -17,6 +18,7 @@
         var map;
         
         require([
+
         "esri/Map",
         "esri/views/SceneView",
         "esri/layers/TileLayer", // Require the TileLayer module
@@ -55,6 +57,7 @@ povertyfeatureLayer = new FeatureLayer({
   url: "https://services5.arcgis.com/7nsPwEMP38bSkCjy/arcgis/rest/services/LA_Poverty_Stats/FeatureServer",
   outFields: ["*"],
 });
+
 
 
  
