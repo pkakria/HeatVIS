@@ -14,36 +14,64 @@
     <link rel="stylesheet" href="https://js.arcgis.com/4.20esri/themes/light/main.css">
     <script src="https://js.arcgis.com/4.20"></script>
     <script>
+        var map;
+        
         require([
-
-        "esri/config",
-
-        "esri/WebScene",
+        "esri/Map",
         "esri/views/SceneView",
-        "esri/widgets/Legend"
+        "esri/layers/TileLayer", // Require the TileLayer module
+                "esri/layers/FeatureLayer",
+        "esri/WebScene"
 
-        ], function(esriConfig,WebScene, SceneView, Legend) {
+        ], (Map, SceneView, TileLayer, FeatureLayer, WebScene) => {
 
-        esriConfig.apiKey = "AAPKf66accaa20fc45e0a24dc06a016982929FVGX4siwhswV60kM_peuLWp4D-NmeHzwdf_rpOIS2Agln-iq-VVrgRXNIDS5YWT";
+          /*  const buildingLayer = new TileLayer({
+            url: "https://tiles.arcgis.com/tiles/Wl7Y1m92PbjtJs5n/arcgis/rest/services/Los_Angeles_Downtown_Buildings/SceneServer"
+        }); */
 
-        const webscene = new WebScene({
-        portalItem: {
-          id: "c14b28f725ec46a98bd265de7a50dd20"
-        }
+        // make web scene
+          const scene = new WebScene({
+          portalItem: {
+            // autocasts as new PortalItem()
+            id: "96c4804062744976a742f744744d88b4"
+          }
         });
 
-        const view = new SceneView({
-        container: "viewDiv",
-        map: webscene
-        });
+        // make scene view
+          // Create the SceneView
+  const view = new SceneView({
+    container: "viewDiv",
+    map: scene
+  });
+        
+featureLayer = new FeatureLayer({
+  url: "https://services2.arcgis.com/zNjnZafDYCAJAbN0/arcgis/rest/services/Cooling_Centers/FeatureServer",
+  outFields: ["*"],
+});
 
-        const legend = new Legend ({
-        view:view
-        });
 
-        view.ui.add(legend, "top-right");
+        
+povertyfeatureLayer = new FeatureLayer({
+  url: "https://services5.arcgis.com/7nsPwEMP38bSkCjy/arcgis/rest/services/LA_Poverty_Stats/FeatureServer",
+  outFields: ["*"],
+});
 
-        });
+
+ 
+
+        scene.add(featureLayer, 0);
+
+        scene.add(povertyfeatureLayer,0);
+        scene.add(buildingLayer,0);
+
+       
+
+});
+
+
+
+      
+        
     </script>
 </head>
 <body>
