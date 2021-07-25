@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>ArcGIS API for JavaScript Tutorials: Display a web scene</title>
+    <title>HeatVIS</title>
     <style>
         html, body, #viewDiv {
             padding: 0;
@@ -16,65 +16,135 @@
     <script src="https://js.arcgis.com/4.20"></script>
     <script>
         var map;
-        
+
         require([
+                "esri/config",
 
         "esri/Map",
         "esri/views/SceneView",
         "esri/layers/TileLayer", // Require the TileLayer module
-                "esri/layers/FeatureLayer",
-        "esri/WebScene"
+        "esri/layers/FeatureLayer",
+        "esri/WebScene",
+        "esri/widgets/Legend",
+        "esri/widgets/Home"
+        ], (esriConfig,Map,SceneView, TileLayer, FeatureLayer, WebScene, Legend, Home) => {
 
-        ], (Map, SceneView, TileLayer, FeatureLayer, WebScene) => {
+        
+        esriConfig.apiKey = "AAPKf66accaa20fc45e0a24dc06a016982929FVGX4siwhswV60kM_peuLWp4D-NmeHzwdf_rpOIS2Agln-iq-VVrgRXNIDS5YWT";
+        
 
-          /*  const buildingLayer = new TileLayer({
-            url: "https://tiles.arcgis.com/tiles/Wl7Y1m92PbjtJs5n/arcgis/rest/services/Los_Angeles_Downtown_Buildings/SceneServer"
-        }); */
+        const coolingRenderer = {
+          type: "simple", // autocasts as new SimpleRenderer()
+          symbol: {
+            type: "point-3d", // autocasts as new PointSymbol3D()
+            symbolLayers: [
+              {
+                type: "object", // autocasts as new ObjectSymbol3DLayer()
+                resource: {
+                  primitive: "cone"
+                },
+                width: 500,// width of the symbol in meters
+                height: 200,
+                material: { color: "blue" }
+              }
+            ]
+          },
+          label: "cooling center location",
+         
+        };
+
 
         // make web scene
-          const scene = new WebScene({
-          portalItem: {
-            // autocasts as new PortalItem()
-            id: "96c4804062744976a742f744744d88b4"
-          }
+        const scene = new WebScene({
+        portalItem: {
+        // autocasts as new PortalItem()
+        id: "284d0d1e58ea45ccacf364c6bc567733"
+        }
         });
 
-        // make scene view
-          // Create the SceneView
-  const view = new SceneView({
-    container: "viewDiv",
-    map: scene
-  });
+      /*  heatLayer = new FeatureLayer({
+        url: "https://services.arcgis.com/Wl7Y1m92PbjtJs5n/arcgis/rest/services/mean_temp_Layer3DToFeatureCl2/FeatureServer"
+        });*/
         
-featureLayer = new FeatureLayer({
-  url: "https://services2.arcgis.com/zNjnZafDYCAJAbN0/arcgis/rest/services/Cooling_Centers/FeatureServer",
-  outFields: ["*"],
-});
 
+        coolingLayer = new FeatureLayer({
+        url: "https://services2.arcgis.com/zNjnZafDYCAJAbN0/arcgis/rest/services/Cooling_Centers/FeatureServer",
+        outFields: ["*"],
+               renderer: coolingRenderer,
+        title: "Cooling Centers"
+        });
 
         
-povertyfeatureLayer = new FeatureLayer({
-  url: "https://services5.arcgis.com/7nsPwEMP38bSkCjy/arcgis/rest/services/LA_Poverty_Stats/FeatureServer",
-  outFields: ["*"],
-});
-
-
-
- 
-
-        scene.add(featureLayer, 0);
-
-        scene.add(povertyfeatureLayer,0);
-        scene.add(buildingLayer,0);
-
-       
-
-});
-
-
-
-      
+        povertyLayer = new FeatureLayer({
         
+        url: "https://services5.arcgis.com/7nsPwEMP38bSkCjy/arcgis/rest/services/LA_Poverty_Stats/FeatureServer",
+            outFields: ["*"],
+           // popupTemplate: template
+
+        });
+
+        parksLayer = new FeatureLayer({
+        url: "https://services1.arcgis.com/X1hcdGx5Fxqn4d0j/arcgis/rest/services/Land_Use_and_Zoning/FeatureServer/1",
+        outFields: ["*"],
+            // popupTemplate: template
+
+        });
+
+     /* // Create the map
+        const map = new Map({
+        layers: [coolingLayer]
+        }); */
+
+
+
+      //map.add(heatLayer);
+     // map.add(parksLayer);
+    //  map.add(povertyLayer);
+
+         scene.add(coolingLayer, 0);
+        scene.add(povertyLayer,0);
+        scene.add(parksLayer,0);
+     //   scene.add(heatLayer,0);
+
+        // Initialize the view with a specific camera
+        const cam = {
+          heading: 0, // face due east
+          tilt: 45, // looking from a bird's eye view
+          position: [ -118.256469, 33.962925, 6000 ]  // creates a point instance (x,y,z)
+        };
+
+        // add the map to a new 3d view
+        const view = new SceneView({
+          map: scene,
+          container: "viewDiv",
+            camera: cam
+        });
+        
+        var legend = new Legend({
+          view: view,
+         layerInfos: [{
+            layer: coolingLayer,
+            title: "Legend"
+          }]
+        });
+
+        view.ui.add(legend, "bottom-left");
+
+        /*
+        var homeBtn = new Home({
+          view: view
+        });
+
+        // Add the home button to the top left corner of the view
+        view.ui.add(homeBtn, "top-left"); 
+      */
+
+        });
+
+
+
+
+
     </script>
 </head>
 <body>
