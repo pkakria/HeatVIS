@@ -1,0 +1,206 @@
+﻿﻿
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no" />
+    <title>HeatVIS</title>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.20/esri/themes/light/main.css" />
+
+    <style>
+        html,
+        body,
+        #viewDiv {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .page-container {
+            margin: 20px;
+        }
+
+
+        /* horizontal panel*/
+
+        .panel-container {
+            display: flex;
+            flex-direction: row;
+            border: 1px solid silver;
+            overflow: hidden;
+            height: 100%;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            flex-wrap: nowrap;
+            /* avoid browser level touch actions */
+            xtouch-action: none;
+        }
+
+        .panel-left {
+            flex: 0 0 auto;
+            /* only manually resize */
+            padding: 10px;
+            width: 300px;
+            min-height: 200px;
+            min-width: 150px;
+            white-space: normal;
+            background-color: lightcyan;
+            color: black;
+            flex-wrap: wrap;
+            text-wrap: normal;
+        }
+
+        .splitter {
+            flex: 0 0 auto;
+            width: 10px;
+            /*background: url(https://raw.githubusercontent.com/RickStrahl/jquery-resizable/master/assets/vsizegrip.png) center center no-repeat #535353; */
+            background-color: black;
+            min-height: 200px;
+            cursor: col-resize;
+        }
+
+        .panel-right {
+            flex: 1 1 auto;
+            /* resizable */
+            padding: 10px;
+            width: 100%;
+            height: 100%;
+            background: #eee;
+        }
+
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: brown;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            text-align: center;
+        }
+
+        li a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+            /* Change the link color to #111 (black) on hover */
+            li a:hover {
+                background-color: crimson;
+            }
+
+        li b {
+            float: right;
+            display: block;
+            padding: 14px 16px;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.20esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.20"></script>
+
+
+    <script>
+        $(".panel-left").resizable({
+            handleSelector: ".splitter",
+            resizeHeight: false
+        });
+    </script>
+
+    <script>
+        require(["esri/views/SceneView", "esri/widgets/LayerList", "esri/WebScene"], function (
+            SceneView,
+            LayerList,
+            WebScene
+        ) {
+            var scene = new WebScene({
+                portalItem: {
+                    // autocasts as new PortalItem()
+                    id: "6d1cd36147d1401e8daeeae80f8cf281"
+                }
+            });
+
+
+            // Initialize the view with a specific camera
+            const cam = {
+                heading: 0, // face due east
+                tilt: 55, // looking from a bird's eye view
+                position: [-118.249469, 33.99225, 4000]  // creates a point instance (x,y,z)
+            };
+
+            // add the map to a new 3d view
+            const view = new SceneView({
+                map: scene,
+                container: "viewDiv",
+                camera: cam
+            });
+
+
+            view.when(function () {
+                var layerList = new LayerList({
+                    view: view
+                });
+
+                // Add widget to the top right corner of the view
+                view.ui.add(layerList, "top-right");
+            });
+        });
+    </script>
+
+</head>
+<body>
+    <ul>
+        <li style="font-size:40px;"><a href="HeatVISMain.html" style="font-size: 40px;">HeatVIS</a></li>
+        <li><a style="font-size:40px;" href="https://devpost.com/submit-to/12839-weekend-of-innovation-2021/manage/submissions/249921-heatvis/project_details/edit" target="_blank">About this app</a></li>
+        <li style="float: right;"><a href="https://www.linkedin.com/in/jessica-schneider-6a4808155/" target="_blank" style="font-size: 15px;"><img src="images/linkedin_small2.png" style="width:20%;" class="github-img" alt="Jessica's LinkedIn link" /><br />Jessica </a></li>
+        <li style="float:right; "><a href="https://github.com/rcorcoranadams" target="_blank"><img src="images/github_small.png" style="width:20%;" class="github-img" alt="Rachel's Github link" /><br />Rachel </a></li>
+        <li style="float:right;"><a href="https://github.com/pkakria" target="_blank"><img src="images/github_small.png" style="width:20%;" class="github-img" alt="Priyanka's Github link" /><br />Priyanka </a></li>
+        <li style="float:right;"><a href="https://github.com/annikaoeth" target="_blank"><img src="images/github_small.png" style="width:20%;" class="github-img" alt="Annika's Github link" /><br />Annika </a></li>
+    </ul>
+
+    <div class="panel-container">
+        <div class="panel-left">
+            <b>HeatVIS: Visualization of Urban Heat Islands</b>
+            <hr />
+            <img src="images/heatVIS.jpg" alt="heat Visualisation Logo" class="center">
+            <p>Heat waves are the deadliest weather-related event to hit cities every year. Vulnerable communities in urban cities are disproportionally affected by the urban heat island effect due to institutional barriers such as access to cooling.</p>
+            <p>So we decided to do something: We have created an easy-to-use web application that visualizes temperature and demographic data that can be used by educational groups, non-profits, and government organizations that are working to create climate resilient communities.</p>
+            <p>HeatVIS will also connect under-resourced communities to be able to find the closest cooling center to cool down and stay safe during the extreme hot weather. IT also aims to initiate a dialogue surrounding cooling equity and how it affects our communities. Our interactive application can be used on phones, computers and outdoor kiosks.­­ </p>
+        </div>
+
+        <div class="splitter">
+
+        </div>
+        <div id="viewDiv" class="panel-right">
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
