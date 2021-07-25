@@ -1,0 +1,67 @@
+﻿<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no" />
+    <title>HeatVIS</title>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.20/esri/themes/light/main.css" />
+
+    <style>
+        html,
+        body,
+        #viewDiv {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+    </style>
+
+    <script src="https://js.arcgis.com/4.20/"></script>
+
+    <script>
+        require(["esri/views/SceneView", "esri/widgets/LayerList", "esri/WebScene"], function(
+        SceneView,
+        LayerList,
+        WebScene
+        ) {
+        var scene = new WebScene({
+        portalItem: {
+        // autocasts as new PortalItem()
+        id: "6d1cd36147d1401e8daeeae80f8cf281"
+        }
+        });
+
+        
+        // Initialize the view with a specific camera
+        const cam = {
+          heading: 0, // face due east
+          tilt: 55, // looking from a bird's eye view
+          position: [ -118.249469, 33.99225, 4000 ]  // creates a point instance (x,y,z)
+        };
+
+        // add the map to a new 3d view
+        const view = new SceneView({
+          map: scene,
+          container: "viewDiv",
+            camera: cam
+        });
+
+
+        view.when(function() {
+        var layerList = new LayerList({
+        view: view
+        });
+
+        // Add widget to the top right corner of the view
+        view.ui.add(layerList, "top-right");
+        });
+        });
+    </script>
+</head>
+
+<body class="calcite">
+    <div id="viewDiv"></div>
+</body>
+</html>
